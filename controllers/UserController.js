@@ -88,3 +88,36 @@ exports.loginRequired = function (req, res, next) {
         return res.status(401).json({ message: 'Unauthorized user!' });
     }
 };
+
+exports.viewProfile = function(req, res, next) {
+    let userId = req.params.userId;
+    User.findById(userId, (err, user, next) => {
+        if (err) {
+            res.status(400).json({ error: 'No user could be found for this ID.' });
+            return next(err);
+        }
+        const userToReturn = setUserInfo(user);
+        return res.status(200).json({ user: userToReturn });
+    });
+}
+
+exports.updateProfile = function(req, res, next) {
+    let userId = req.user._id;
+    User.findOneAndUpdate(
+        { _id: userId },
+        {
+          "profile.username": req.params.username,
+          "profile.tags": req.params.tags,
+          "profile.bio": req.params.bio
+        },
+        function(err, user) {
+          if (err) {
+            return next(err);
+          }
+          return res.status(200).json({
+            status: "updated profile successfully",
+            user: user
+          });
+        }
+      );
+}

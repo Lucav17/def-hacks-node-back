@@ -17,6 +17,12 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    profile: {
+        name: { type: String },
+        bio: { type: String },
+        tags: [{ type: String }],
+        is_company: { type: Boolean }
+    }
 }, {
         timestamps: true
     });
